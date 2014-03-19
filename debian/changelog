@@ -1,0 +1,5 @@
+pyramid-kvs (0.1-1~gandi) unstable; urgency=low
+
+  * Initial packaging.
+
+ -- Nicolas Chipaux <aegiap@gandi.net>  Wed, 19 Mar 2014 13:49:08 +0100
