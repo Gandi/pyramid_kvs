@@ -1,0 +1,6 @@
+dist
+build
+*.egg-info
+.project
+.pydevproject
+venv*
