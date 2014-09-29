@@ -1,4 +1,10 @@
-pyramid-kvs (0.1-1~gandi) unstable; urgency=low
+pyramid-kvs (0.1.1-1~gandi) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Guillaume Gauvrit <guillaume@gandi.net>  Mon, 29 Sep 2014 14:43:23 +0100
+ 
+ pyramid-kvs (0.1-1~gandi) unstable; urgency=low
 
   * Initial packaging.
 
