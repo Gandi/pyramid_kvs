@@ -31,9 +31,9 @@
 from struct import unpack
 
 try:
-    import io as cStringIO
+    from io import BytesIO
 except ImportError:
-    import cStringIO
+    from cStringIO import StringIO as BytesIO
 
 
 def _read_size(fh, cache):
@@ -304,7 +304,7 @@ def process_item(fh, cache):
         return engine[magic_type](fh, cache)
             
 def thaw(frozen_data):
-    fh = cStringIO.StringIO(frozen_data)
+    fh = BytesIO(frozen_data)
     data = deserialize(fh);
     fh.close();
     return data
