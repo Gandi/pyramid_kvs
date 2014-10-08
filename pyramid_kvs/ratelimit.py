@@ -6,6 +6,7 @@ from .kvs import KVS
 
 log = logging.getLogger(__name__)
 
+
 class RateLimitError(Exception):
     pass
 

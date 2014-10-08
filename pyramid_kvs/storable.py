@@ -29,7 +29,12 @@
 #
 
 from struct import unpack
-import cStringIO
+
+try:
+    import io as cStringIO
+except ImportError:
+    import cStringIO
+
 
 def _read_size(fh, cache):
     return unpack(cache['size_unpack_fmt'], fh.read(4))[0]

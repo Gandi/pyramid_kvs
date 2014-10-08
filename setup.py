@@ -1,8 +1,10 @@
 import os
 import re
+import sys
 
 from setuptools import setup, find_packages
 
+PY3 = sys.version_info[0] == 3
 here = os.path.abspath(os.path.dirname(__file__))
 name = 'pyramid_kvs'
 
@@ -17,8 +19,13 @@ with open(os.path.join(here, name, '__init__.py')) as v_file:
 
 
 requires = ['pyramid >1.3, <1.5.99',
-            'python-memcached',
             'redis']
+
+if PY3:
+    requires.append('python3-memcached')
+else:
+    requires.append('python-memcached')
+
 
 setup(name=name.replace('_', '-'),
       version=version,

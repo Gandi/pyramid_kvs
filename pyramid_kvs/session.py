@@ -4,7 +4,7 @@ from uuid import uuid4
 from hashlib import sha1
 from collections import defaultdict
 
-from zope.interface import implements
+from zope.interface import implementer
 from pyramid.interfaces import ISession, ISessionFactory
 
 from .serializer import serializer
@@ -17,8 +17,8 @@ def _create_token():
     return sha1(str(uuid4())).hexdigest()
 
 
+@implementer(ISession)
 class SessionBase(object):
-    implements(ISession)
 
     def __init__(self, request, client, key_name):
         self._dirty = False
@@ -148,9 +148,8 @@ class SessionBase(object):
             self.request.add_response_callback(self.save_session)
 
 
+@implementer(ISession)
 class AuthTokenSession(SessionBase):
-
-    implements(ISession)
 
     def get_session_key(self):
 
@@ -179,8 +178,8 @@ class AuthTokenSession(SessionBase):
         self.client.set(self._session_key, self._session_data)
 
 
+@implementer(ISession)
 class CookieSession(SessionBase):
-    implements(ISession)
 
     def get_session_key(self):
         session_key = self.request.cookies.get(self.key_name)
@@ -198,8 +197,8 @@ class CookieSession(SessionBase):
         self.client.set(self._session_key, self._session_data)
 
 
+@implementer(ISessionFactory)
 class SessionFactory(object):
-    implements(ISessionFactory)
 
     def __init__(self, settings):
         config = serializer('json').loads(settings['kvs.session'])

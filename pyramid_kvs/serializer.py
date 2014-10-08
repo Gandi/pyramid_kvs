@@ -1,6 +1,10 @@
 from __future__ import absolute_import
 
-import cPickle as pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 try:
     import simplejson as json
 except ImportError:

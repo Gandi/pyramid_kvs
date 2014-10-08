@@ -1,4 +1,10 @@
-__version__ = '0.1.1'
+"""
+pyramid_kvs is a Key/Value Store helpers for pyramid.
+
+See the README.rst file for more information.
+"""
+
+__version__ = '0.2'
 
 from pyramid.events import NewRequest
 

@@ -1,3 +1,9 @@
+0.2
+===
+
+* Add python 3 support
+
+
 0.1.1
 =====
 
