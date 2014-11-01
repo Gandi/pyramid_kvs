@@ -121,9 +121,11 @@ class SessionBase(object):
         return time.time()  # XXX fix me
 
     def new_csrf_token(self):
-        self['__csrf_token'] = _create_token()
+        self['__csrf_token'] = _create_token().decode('utf-8')
 
     def get_csrf_token(self):
+        if '__csrf_token' not in self:
+            self.new_csrf_token()
         return self['__csrf_token']
 
     def peek_flash(self, queue=''):
