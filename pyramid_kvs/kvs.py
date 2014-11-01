@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import sys
 
 from .serializer import serializer
@@ -37,8 +39,9 @@ class KVS(object):
         return self.raw_set(key, value, ttl or self.ttl)
 
     def _get_key(self, key):
-        key = self.key_prefix + key
-        return key.encode('utf-8') if isinstance(key, unicode) else key
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        return self.key_prefix + key
 
     def _create_client(self, **kwargs):
         raise NotImplementedError()
