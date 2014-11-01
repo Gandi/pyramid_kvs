@@ -1,7 +1,7 @@
 import logging
 import time
-from uuid import uuid4
-from hashlib import sha1
+import os
+import binascii
 from collections import defaultdict
 
 from zope.interface import implementer
@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def _create_token():
-    return sha1(str(uuid4())).hexdigest()
+    return binascii.hexlify(os.urandom(20))
 
 
 @implementer(ISession)

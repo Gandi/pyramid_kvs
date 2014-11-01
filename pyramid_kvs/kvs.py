@@ -1,5 +1,11 @@
+import sys
 
 from .serializer import serializer
+
+
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 
 class KVS(object):
@@ -12,7 +18,7 @@ class KVS(object):
 
     def __init__(self, kvs,
                  kvs_kwargs=None, key_prefix='', ttl=3600, codec='pickle'):
-        self.key_prefix = key_prefix
+        self.key_prefix = key_prefix.encode('utf-8')
         self.ttl = ttl
         self._serializer = serializer(codec)
         kvs_kwargs = kvs_kwargs or {}
