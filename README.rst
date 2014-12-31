@@ -1,6 +1,9 @@
 pyramid_kvs
 ===========
 
+.. image:: https://travis-ci.org/Gandi/pyramid_kvs.svg?branch=master
+    :target: https://travis-ci.org/Gandi/pyramid_kvs
+
 Some Key Value Store basics for pyramid:
 
 Two KVS are implemented:
