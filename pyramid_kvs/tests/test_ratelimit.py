@@ -26,11 +26,11 @@ class RatelimitTestCase(unittest.TestCase):
         Ratelimit.limit = 10
 
         MockCache.cached_data = {
-            'header::x-dummy-header::dummy_key': '{"akey": "a val"}',
-            'header::x-dummy-header::dummy_key::ratelimit': '9'
+            b'header::x-dummy-header::dummy_key': '{"akey": "a val"}',
+            b'header::x-dummy-header::dummy_key::ratelimit': '9'
         }
         DummyRequest(headers={'X-Dummy-Header': 'dummy_key'})
-        rte = MockCache.cached_data['header::x-dummy-header::dummy_key::ratelimit']
-        self.assertEquals(rte, '10')
+        rte = MockCache.cached_data[b'header::x-dummy-header::dummy_key::ratelimit']
+        self.assertEqual(rte, '10')
         self.assertRaises(RateLimitError, DummyRequest,
                           headers={'X-Dummy-Header': 'dummy_key'})

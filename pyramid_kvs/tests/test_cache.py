@@ -10,7 +10,6 @@ from .. import serializer
 from . import MockCache
 
 
-
 class DummyRequest(testing.DummyRequest):
     def __init__(self, *args, **kwargs):
         super(DummyRequest, self).__init__(*args, **kwargs)
@@ -32,9 +31,9 @@ class CacheTestCase(unittest.TestCase):
         self.assertIsInstance(request.cache, ApplicationCache)
         client = request.cache.client
         self.assertIsInstance(client, MockCache)
-        self.assertEquals(client._serializer.dumps, serializer.json.dumps)
-        self.assertEquals(client.ttl, 20)
-        self.assertEquals(client.key_prefix, 'test::')
+        self.assertEqual(client._serializer.dumps, serializer.json.dumps)
+        self.assertEqual(client.ttl, 20)
+        self.assertEqual(client.key_prefix, b'test::')
 
         request.cache['dummy'] = 'value'
-        self.assertEquals(MockCache.cached_data['test::dummy'], '"value"')
+        self.assertEqual(MockCache.cached_data[b'test::dummy'], '"value"')
