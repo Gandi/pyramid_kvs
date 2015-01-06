@@ -28,6 +28,8 @@ else:
     requires.append('python-memcached')
 
 tests_require = ['nose', 'coverage']
+if sys.version_info < (2, 7):
+    tests_require += ['unittest2']
 
 extras_require = {'test': tests_require}
 

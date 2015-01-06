@@ -1,6 +1,6 @@
-import unittest
 from pyramid import testing
 
+from .compat import unittest
 from ..session import SessionFactory, AuthTokenSession, CookieSession
 from .. import serializer
 from . import MockCache

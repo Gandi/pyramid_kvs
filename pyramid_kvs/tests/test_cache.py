@@ -1,7 +1,7 @@
-import unittest
 from pyramid import testing
 from pyramid.events import NewRequest
 
+from .compat import unittest
 from .. import subscribe_cache
 
 from .. import includeme
