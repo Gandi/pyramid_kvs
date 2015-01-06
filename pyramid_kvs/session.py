@@ -114,7 +114,7 @@ class SessionBase(object):
     # ISession Stuff
     def invalidate(self):
         self.changed()
-        self._session_data = None
+        self._session_data = defaultdict(defaultdict)
 
     @property
     def created(self):

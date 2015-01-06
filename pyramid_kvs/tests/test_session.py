@@ -50,3 +50,29 @@ class SessionTestCase(unittest.TestCase):
         self.assertEquals(client.key_prefix, 'cookie::')
         self.assertEquals(session['anotherkey'], 'another val')
         self.assertEquals(request.response_callbacks, [session.save_session])
+
+    def test_should_renew_session_on_invalidate(self):
+        """test that session can be reused just after invalidation
+        """
+        settings = {'kvs.session': """{"kvs": "mock",
+                                       "key_name": "SessionId",
+                                       "session_type": "cookie",
+                                       "codec": "json",
+                                       "key_prefix": "cookie::",
+                                       "ttl": 20}"""}
+        factory = SessionFactory(settings)
+        MockCache.cached_data = {
+            'cookie::chocolate': '{"stuffing": "chocolate"}'
+        }
+        request = testing.DummyRequest(cookies={'SessionId': 'chocolate'})
+        session = factory(request)
+
+        # Ensure session is initialized
+        self.assertEquals(session['stuffing'], 'chocolate')
+        # Invalidate session
+        session.invalidate()
+        # session is invalidated
+        self.assertFalse('stuffing' in session)
+        # ensure it can be reused immediately
+        session['stuffing'] = 'macadamia'
+        self.assertEquals(session['stuffing'], 'macadamia')
