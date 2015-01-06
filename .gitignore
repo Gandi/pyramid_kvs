@@ -5,3 +5,6 @@ build
 .pydevproject
 *.py[co]
 venv*
+
+.coverage
+

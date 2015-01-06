@@ -21,10 +21,15 @@ with open(os.path.join(here, name, '__init__.py')) as v_file:
 requires = ['pyramid >1.3, <1.5.99',
             'redis']
 
+
 if PY3:
     requires.append('python3-memcached')
 else:
     requires.append('python-memcached')
+
+tests_require = ['nose', 'coverage']
+
+extras_require = {'test': tests_require}
 
 
 setup(name=name.replace('_', '-'),
@@ -45,6 +50,9 @@ setup(name=name.replace('_', '-'),
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
+      test_suite='{0}.tests'.format(name),
       install_requires=requires,
+      tests_require=tests_require,
+      extras_require=extras_require
       )
 
