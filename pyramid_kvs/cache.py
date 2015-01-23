@@ -50,6 +50,8 @@ class ApplicationCache(object):
 
     def pop(self, key, default=None):
         try:
+            data = self.client.get(key, default)
             self.__delitem__(key)
         except KeyError:
-            return default
+            pass
+        return data

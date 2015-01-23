@@ -35,5 +35,15 @@ class CacheTestCase(unittest.TestCase):
         self.assertEqual(client.ttl, 20)
         self.assertEqual(client.key_prefix, b'test::')
 
+    def test_cache_set(self):
+
+        request = DummyRequest()
         request.cache['dummy'] = 'value'
         self.assertEqual(MockCache.cached_data[b'test::dummy'], '"value"')
+
+    def test_pop_val(self):
+        request = DummyRequest()
+        MockCache.cached_data[b'test::popme'] = '"value"'
+        val = request.cache.pop('popme')
+        self.assertEqual(val, 'value')
+        self.assertNotIn('popme', MockCache.cached_data)
