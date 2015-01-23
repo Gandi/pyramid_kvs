@@ -3,6 +3,7 @@ from .. import kvs
 
 class MockCache(kvs.KVS):
     cached_data = {}
+    last_ttl = None
 
     def _create_client(self, **kwargs):
         return self
@@ -15,6 +16,7 @@ class MockCache(kvs.KVS):
 
     def raw_set(self, key, value, ttl):
         self.cached_data[self._get_key(key)] = value
+        MockCache.last_ttl = ttl
 
     def incr(self, key):
         value = int(self.cached_data[self._get_key(key)])

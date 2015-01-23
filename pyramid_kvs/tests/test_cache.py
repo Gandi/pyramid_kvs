@@ -40,6 +40,13 @@ class CacheTestCase(unittest.TestCase):
         request = DummyRequest()
         request.cache['dummy'] = 'value'
         self.assertEqual(MockCache.cached_data[b'test::dummy'], '"value"')
+        self.assertEqual(MockCache.last_ttl, 20)
+
+    def test_cache_set_ttl(self):
+        request = DummyRequest()
+        request.cache.set('dummy', 'value', 200)
+        self.assertEqual(MockCache.cached_data[b'test::dummy'], '"value"')
+        self.assertEqual(MockCache.last_ttl, 200)
 
     def test_pop_val(self):
         request = DummyRequest()
