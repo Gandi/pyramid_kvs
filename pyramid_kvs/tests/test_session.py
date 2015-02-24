@@ -52,8 +52,6 @@ class SessionTestCase(unittest.TestCase):
         self.assertEqual(request.response_callbacks, [session.save_session])
 
     def test_should_renew_session_on_invalidate(self):
-        """test that session can be reused just after invalidation
-        """
         settings = {'kvs.session': """{"kvs": "mock",
                                        "key_name": "SessionId",
                                        "session_type": "cookie",

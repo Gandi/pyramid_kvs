@@ -46,10 +46,12 @@ class ApplicationCache(object):
         return self.client.get(key, default)
 
     def set(self, key, value, ttl=None):
-        self.client.set(key, value, ttl=None)
+        self.client.set(key, value, ttl=ttl)
 
     def pop(self, key, default=None):
         try:
+            data = self.client.get(key, default)
             self.__delitem__(key)
         except KeyError:
-            return default
+            pass
+        return data
