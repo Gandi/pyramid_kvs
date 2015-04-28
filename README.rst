@@ -1,3 +1,4 @@
+===========
 pyramid_kvs
 ===========
 
@@ -23,7 +24,8 @@ configuration like below.
 Component settings are written in json.
 
 Cache
------
+=====
+
 The application cache is a new attribute of the session. ``request.cache`` if
 the settings ``kvs.cache`` exists.
 Here are an example of configuration
@@ -41,7 +43,7 @@ The example contains every key with their default values for a redis instance.
 The ``kvs_kwargs`` key is passed to the driver to build the client connection.
 
 Session
--------
+=======
 
 The session is accessible via "request.session", it's in every pyramid
 application.
@@ -72,7 +74,7 @@ it's help to create a cache per user in an API. API don't use cookies.
 
 
 Ratelimit
----------
+=========
 
 The ratelimit works only if the kvs.session is used!
 Ratelimit is per session hold and limit number of http queries in a defined
@@ -93,7 +95,7 @@ following http headers:
 
 
 perlsess
---------
+========
 
 This permit to read a session from a perl that use `storable`_ session.
 
