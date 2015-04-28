@@ -4,10 +4,9 @@ from pyramid.events import NewRequest
 from .compat import unittest
 from .. import subscribe_cache
 
-from .. import includeme
 from ..cache import ApplicationCache
 from .. import serializer
-from . import MockCache
+from ..testing import MockCache
 
 
 class DummyRequest(testing.DummyRequest):
@@ -24,7 +23,10 @@ class CacheTestCase(unittest.TestCase):
                                      "key_prefix": "test::",
                                      "ttl": 20}"""}
         self.config = testing.setUp(settings=settings)
-        self.config.include(includeme)
+        self.config.include('pyramid_kvs.testing')
+
+    def tearDown(self):
+        testing.tearDown()
 
     def test_cache(self):
         request = DummyRequest()

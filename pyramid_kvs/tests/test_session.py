@@ -3,13 +3,14 @@ from pyramid import testing
 from .compat import unittest
 from ..session import SessionFactory, AuthTokenSession, CookieSession
 from .. import serializer
-from . import MockCache
+from ..testing import MockCache, includeme as testing_includeme
 
 
 class SessionTestCase(unittest.TestCase):
 
     def test_authtoken(self):
-        settings = {'kvs.session': """{"kvs": "mock",
+        settings = {'pyramid.includes': '\n  pyramid_kvs.testing',
+                    'kvs.session': """{"kvs": "mock",
                                        "key_name": "X-Dummy-Header",
                                        "session_type": "header",
                                        "codec": "json",
@@ -17,6 +18,7 @@ class SessionTestCase(unittest.TestCase):
                                        "ttl": 20}"""}
         MockCache.cached_data = {b'header::x-dummy-header::dummy_key':
                                      '{"akey": "a val"}'}
+        testing.setUp(settings=settings)
         factory = SessionFactory(settings)
         self.assertEqual(factory.session_class, AuthTokenSession)
         request = testing.DummyRequest(headers={'X-Dummy-Header': 'dummy_key'})
@@ -28,14 +30,17 @@ class SessionTestCase(unittest.TestCase):
         self.assertEqual(client.key_prefix, b'header::')
         self.assertEqual(session['akey'], 'a val')
         self.assertEqual(request.response_callbacks, [session.save_session])
+        testing.tearDown()
 
     def test_cookie(self):
-        settings = {'kvs.session': """{"kvs": "mock",
+        settings = {'pyramid.includes': '\n  pyramid_kvs.testing',
+                    'kvs.session': """{"kvs": "mock",
                                        "key_name": "SessionId",
                                        "session_type": "cookie",
                                        "codec": "json",
                                        "key_prefix": "cookie::",
                                        "ttl": 20}"""}
+        testing.setUp(settings=settings)
         factory = SessionFactory(settings)
         MockCache.cached_data = {
             b'cookie::chocolate': '{"anotherkey": "another val"}'
@@ -50,14 +55,17 @@ class SessionTestCase(unittest.TestCase):
         self.assertEqual(client.key_prefix, b'cookie::')
         self.assertEqual(session['anotherkey'], 'another val')
         self.assertEqual(request.response_callbacks, [session.save_session])
+        testing.tearDown()
 
     def test_should_renew_session_on_invalidate(self):
-        settings = {'kvs.session': """{"kvs": "mock",
+        settings = {'pyramid.includes': '\n  pyramid_kvs.testing',
+                    'kvs.session': """{"kvs": "mock",
                                        "key_name": "SessionId",
                                        "session_type": "cookie",
                                        "codec": "json",
                                        "key_prefix": "cookie::",
                                        "ttl": 20}"""}
+        testing.setUp(settings=settings)
         factory = SessionFactory(settings)
         MockCache.cached_data = {
             b'cookie::chocolate': '{"stuffing": "chocolate"}'
@@ -74,3 +82,4 @@ class SessionTestCase(unittest.TestCase):
         # ensure it can be reused immediately
         session['stuffing'] = 'macadamia'
         self.assertEqual(session['stuffing'], 'macadamia')
+        testing.tearDown()

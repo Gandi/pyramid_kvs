@@ -135,3 +135,13 @@ tweak the settings like above.
 
     # Authorize a session holder to do 20 http queries max in 2 seconds.
     kvs.ratelimit = {"window": 2, "limit": 20}
+
+
+tests
+=====
+
+pyramid_kvs have also a 'mock' implementation of a `kvs` used for testing
+purpose, register it using the pyramid plugins in your tests:::
+
+pyramid.includes =
+    pyramid_kvs.testing
