@@ -93,3 +93,10 @@ class Memcache(KVS):
 _implementations = {'redis': Redis,
                     'memcache': Memcache
                     }
+
+
+def register(name, impl):
+    """ Register your own implementation,
+    it also override registered implementation without any check.
+    """
+    _implementations[name] = impl

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.1
+---
+
+* Improve testing
+
+
 0.2
 ---
 
