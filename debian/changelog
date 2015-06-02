@@ -1,10 +1,16 @@
+pyramid-kvs (0.2.2) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Guillaume Gauvrit <guillaume@gandi.net>  Tue, 02 Jun 2015 16:51:00 +0200
+ 
 pyramid-kvs (0.1.1-1~gandi) unstable; urgency=low
 
   * New upstream version.
 
  -- Guillaume Gauvrit <guillaume@gandi.net>  Mon, 29 Sep 2014 14:43:23 +0100
  
- pyramid-kvs (0.1-1~gandi) unstable; urgency=low
+pyramid-kvs (0.1-1~gandi) unstable; urgency=low
 
   * Initial packaging.
 
