@@ -45,6 +45,9 @@ class ApplicationCache(object):
     def get(self, key, default=None):
         return self.client.get(key, default)
 
+    def list_keys(self, pattern='*'):
+        return self.client.get_keys(pattern)
+
     def set(self, key, value, ttl=None):
         self.client.set(key, value, ttl=ttl)
 
