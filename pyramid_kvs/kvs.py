@@ -43,6 +43,9 @@ class KVS(object):
             key = key.encode('utf-8')
         return self.key_prefix + key
 
+    def get_keys(self, pattern):
+        raise NotImplementedError()
+
     def _create_client(self, **kwargs):
         raise NotImplementedError()
 
@@ -68,6 +71,10 @@ class Redis(KVS):
 
     def incr(self, key):
         return self._client.incr(self._get_key(key))
+
+    def get_keys(self, pattern='*'):
+        keys = self._client.keys(self._get_key(pattern))
+        return [key.replace(self.key_prefix, '') for key in keys]
 
 
 class _NoCodec(object):
