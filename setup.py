@@ -18,8 +18,7 @@ with open(os.path.join(here, name, '__init__.py')) as v_file:
                          re.S).match(v_file.read()).group(1)
 
 
-requires = ['pyramid >1.3, <1.5.99',
-            'redis']
+requires = ['pyramid', 'redis']
 
 
 if PY3:
