@@ -1,5 +1,6 @@
 from pyramid import testing
 
+from collections import deque
 from .compat import unittest
 from ..session import SessionFactory, AuthTokenSession, CookieSession
 from .. import serializer
@@ -29,7 +30,8 @@ class SessionTestCase(unittest.TestCase):
         self.assertEqual(client.ttl, 20)
         self.assertEqual(client.key_prefix, b'header::')
         self.assertEqual(session['akey'], 'a val')
-        self.assertEqual(request.response_callbacks, [session.save_session])
+        self.assertEqual(request.response_callbacks,
+                         deque([session.save_session]))
         testing.tearDown()
 
     def test_cookie(self):
@@ -54,7 +56,8 @@ class SessionTestCase(unittest.TestCase):
         self.assertEqual(client.ttl, 20)
         self.assertEqual(client.key_prefix, b'cookie::')
         self.assertEqual(session['anotherkey'], 'another val')
-        self.assertEqual(request.response_callbacks, [session.save_session])
+        self.assertEqual(request.response_callbacks,
+                         deque([session.save_session]))
         testing.tearDown()
 
     def test_should_renew_session_on_invalidate(self):
