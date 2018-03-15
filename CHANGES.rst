@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.0 (2018-03-15)
+------------------
+
+ * Don't freeze pyramid version
+ * Remove support of python 2.6
+
+
 0.2.3 (2015-09-14)
 ------------------
 

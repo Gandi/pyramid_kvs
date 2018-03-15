@@ -1,3 +1,9 @@
+pyramid-kvs (0.3.0) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Guillaume Gauvrit <guillaume@gandi.net>  Thu, 15 Mar 2018 14:41:48 +0100
+
 pyramid-kvs (0.2.3) unstable; urgency=low
 
   * New upstream release
