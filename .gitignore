@@ -3,6 +3,7 @@ build
 *.egg-info
 .project
 .pydevproject
+.vscode
 *.py[co]
 venv*
 
