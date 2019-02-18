@@ -4,7 +4,7 @@ pyramid_kvs is a Key/Value Store helpers for pyramid.
 See the README.rst file for more information.
 """
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 from pyramid.events import NewRequest
 

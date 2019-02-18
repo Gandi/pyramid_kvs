@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4.0 (2019-02-18)
+------------------
+
+ * Fix backward incompatibility of redis 3.x
+ * Drop support of redix 2.x branch
+
+
 0.3.0 (2018-03-15)
 ------------------
 
