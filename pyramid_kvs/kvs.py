@@ -67,7 +67,7 @@ class Redis(KVS):
         return redis.Redis(**kwargs)
 
     def raw_set(self, key, value, ttl):
-        self._client.setex(self._get_key(key), value, ttl)
+        self._client.setex(self._get_key(key), ttl, value)
 
     def incr(self, key):
         return self._client.incr(self._get_key(key))

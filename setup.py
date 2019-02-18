@@ -18,7 +18,7 @@ with open(os.path.join(here, name, '__init__.py')) as v_file:
                          re.S).match(v_file.read()).group(1)
 
 
-requires = ['pyramid', 'redis']
+requires = ['pyramid', 'redis >= 3.0']
 
 
 if PY3:
