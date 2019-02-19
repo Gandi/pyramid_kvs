@@ -25,7 +25,7 @@ class ApplicationCache(object):
         """
         server = serializer('json').loads(settings['kvs.cache'])
         server.setdefault('key_prefix', 'cache::')
-        server.setdefault('codec', 'pickle')
+        server.setdefault('codec', 'json')
         cls.client = KVS(**server)
 
     def __getitem__(self, key):

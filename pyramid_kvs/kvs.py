@@ -19,10 +19,14 @@ class KVS(object):
         return object.__new__(_implementations[kvs])
 
     def __init__(self, kvs,
-                 kvs_kwargs=None, key_prefix='', ttl=3600, codec='pickle'):
+                 kvs_kwargs=None, key_prefix='', ttl=3600, codec='json'):
         self.key_prefix = key_prefix.encode('utf-8')
         self.ttl = ttl
         self._serializer = serializer(codec)
+        # If the codec is not specified in the configuration
+        # the codec was pickle, and now it is json, so we have
+        # to fallback to the previous serializer
+        self._backward_serializer = serializer('pickle')
         kvs_kwargs = kvs_kwargs or {}
         self._client = self._create_client(**kvs_kwargs)
 
@@ -32,7 +36,10 @@ class KVS(object):
         ret = self.raw_get(key)
         if ret is None:
             return default
-        return self._serializer.loads(ret)
+        try:
+            return self._serializer.loads(ret)
+        except Exception:
+            return self._backward_serializer.loads(ret)
 
     def set(self, key, value, ttl=None):
         value = self._serializer.dumps(value)
