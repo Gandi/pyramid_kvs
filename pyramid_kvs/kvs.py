@@ -26,7 +26,7 @@ class KVS(object):
         # If the codec is not specified in the configuration
         # the codec was pickle, and now it is json, so we have
         # to fallback to the previous serializer
-        self._backward_serializer = serializer('pickle')
+        self._fallback_serializer = serializer('pickle')
         kvs_kwargs = kvs_kwargs or {}
         self._client = self._create_client(**kvs_kwargs)
 
@@ -39,7 +39,7 @@ class KVS(object):
         try:
             return self._serializer.loads(ret)
         except Exception:
-            return self._backward_serializer.loads(ret)
+            return self._fallback_serializer.loads(ret)
 
     def set(self, key, value, ttl=None):
         value = self._serializer.dumps(value)
