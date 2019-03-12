@@ -1,12 +1,28 @@
 Changelog
 =========
 
+0.4.1 (2019-03-12)
+------------------
+
+ * Switch default serializer to json
+   WARNING: pickle serialize datetime by default, json don't, force the
+            serializer to pickle for backward compatibility in case datetime
+            are serialized
+
 0.4.0 (2019-02-18)
 ------------------
 
  * Fix backward incompatibility of redis 3.x
  * Drop support of redix 2.x branch
 
+
+0.3.1 (2019-02-22)
+------------------
+
+ * Switch default serializer to json
+   WARNING: pickle serialize datetime by default, json don't, force the
+            serializer to pickle for backward compatibility in case datetime
+            are serialized
 
 0.3.0 (2018-03-15)
 ------------------
