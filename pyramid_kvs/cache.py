@@ -23,7 +23,11 @@ class ApplicationCache(object):
     def connect(cls, settings):
         """ Call that method in the pyramid configuration phase.
         """
-        server = serializer('json').loads(settings['kvs.cache'])
+        server = (
+            settings['kvs.cache']
+            if isinstance(settings['kvs.cache'], dict)
+            else serializer('json').loads(settings['kvs.cache'])
+        )
         server.setdefault('key_prefix', 'cache::')
         server.setdefault('codec', 'json')
         cls.client = KVS(**server)
