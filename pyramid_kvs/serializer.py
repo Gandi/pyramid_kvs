@@ -17,8 +17,9 @@ except ImportError:
 
 
 class Storable(object):
-    """ Something you probably don't want to use.
-    This class is to get the perl storable support as a readable codec. """
+    """Something you probably don't want to use.
+    This class is to get the perl storable support as a readable codec."""
+
     @staticmethod
     def loads(data):
         return storable.thaw(data)
@@ -30,11 +31,9 @@ class Storable(object):
 
 def serializer(codec):
     """
-     Create a serializer that support loads/dumps methods.
-     json and pickle are fully supported.
-     storable support read only.
+    Create a serializer that support loads/dumps methods.
+    json and pickle are fully supported.
+    storable support read only.
     """
-    formats = {'json': json,
-               'pickle': pickle,
-               'storable': Storable}
+    formats = {"json": json, "pickle": pickle, "storable": Storable}
     return formats[codec]

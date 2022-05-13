@@ -11,6 +11,7 @@ class PerlSession(object):
     Read only session from a perl storable.
     Use the "connect method" during the configuration to initialize it
     """
+
     cookie_name = None
     client = None
 
@@ -20,7 +21,7 @@ class PerlSession(object):
         self.request = request
         self._session_data = self.client.get(self._session_key)
         if self._session_data is None:
-            log.warn('session %s not deserialized' % self._session_key)
+            log.warn("session %s not deserialized" % self._session_key)
             self._session_data = {}
 
     def __call__(self, request):
@@ -28,12 +29,11 @@ class PerlSession(object):
 
     @classmethod
     def connect(cls, settings):
-        """ Call that method in the pyramid configuration phase.
-        """
-        server = serializer('json').loads(settings['kvs.perlsess'])
-        server.setdefault('key_prefix', 'perlsess::')
-        server.setdefault('codec', 'storable')
-        cls.cookie_name = server.pop('cookie_name', 'session_id')
+        """Call that method in the pyramid configuration phase."""
+        server = serializer("json").loads(settings["kvs.perlsess"])
+        server.setdefault("key_prefix", "perlsess::")
+        server.setdefault("codec", "storable")
+        cls.cookie_name = server.pop("cookie_name", "session_id")
         cls.client = KVS(**server)
 
     def __getitem__(self, key):

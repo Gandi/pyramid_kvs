@@ -14,18 +14,18 @@ class KVS(object):
     Create a Key Value Store connection.
     Redis and Memcache are support.
     """
+
     def __new__(cls, kvs, *args, **kwargs):
         return object.__new__(_implementations[kvs])
 
-    def __init__(self, kvs,
-                 kvs_kwargs=None, key_prefix='', ttl=3600, codec='json'):
-        self.key_prefix = key_prefix.encode('utf-8')
+    def __init__(self, kvs, kvs_kwargs=None, key_prefix="", ttl=3600, codec="json"):
+        self.key_prefix = key_prefix.encode("utf-8")
         self.ttl = ttl
         self._serializer = serializer(codec)
         # If the codec is not specified in the configuration
         # the codec was pickle, and now it is json, so we have
         # to fallback to the previous serializer
-        self._backward_serializer = serializer('pickle')
+        self._backward_serializer = serializer("pickle")
         kvs_kwargs = kvs_kwargs or {}
         self._client = self._create_client(**kvs_kwargs)
 
@@ -46,7 +46,7 @@ class KVS(object):
 
     def _get_key(self, key):
         if isinstance(key, unicode):
-            key = key.encode('utf-8')
+            key = key.encode("utf-8")
         return self.key_prefix + key
 
     def get_keys(self, pattern):
@@ -67,9 +67,9 @@ class KVS(object):
 
 
 class Redis(KVS):
-
     def _create_client(self, **kwargs):
         import redis
+
         return redis.Redis(**kwargs)
 
     def raw_set(self, key, value, ttl):
@@ -78,9 +78,9 @@ class Redis(KVS):
     def incr(self, key):
         return self._client.incr(self._get_key(key))
 
-    def get_keys(self, pattern='*'):
+    def get_keys(self, pattern="*"):
         keys = self._client.keys(self._get_key(pattern))
-        return [key.replace(self.key_prefix, '') for key in keys]
+        return [key.replace(self.key_prefix, "") for key in keys]
 
 
 class _NoCodec(object):
@@ -96,20 +96,17 @@ class _NoCodec(object):
 
 
 class Memcache(KVS):
-
     def _create_client(self, **kwargs):
         import memcache
-        return memcache.Client(pickler=_NoCodec, unpickler=_NoCodec,
-                               **kwargs)
+
+        return memcache.Client(pickler=_NoCodec, unpickler=_NoCodec, **kwargs)
 
 
-_implementations = {'redis': Redis,
-                    'memcache': Memcache
-                    }
+_implementations = {"redis": Redis, "memcache": Memcache}
 
 
 def register(name, impl):
-    """ Register your own implementation,
+    """Register your own implementation,
     it also override registered implementation without any check.
     """
     _implementations[name] = impl

@@ -10,6 +10,7 @@ class ApplicationCache(object):
     """
     An application cache for pyramid
     """
+
     client = None
 
     def __init__(self, request):
@@ -20,15 +21,14 @@ class ApplicationCache(object):
 
     @classmethod
     def connect(cls, settings):
-        """ Call that method in the pyramid configuration phase.
-        """
+        """Call that method in the pyramid configuration phase."""
         server = (
-            settings['kvs.cache']
-            if isinstance(settings['kvs.cache'], dict)
-            else serializer('json').loads(settings['kvs.cache'])
+            settings["kvs.cache"]
+            if isinstance(settings["kvs.cache"], dict)
+            else serializer("json").loads(settings["kvs.cache"])
         )
-        server.setdefault('key_prefix', 'cache::')
-        server.setdefault('codec', 'json')
+        server.setdefault("key_prefix", "cache::")
+        server.setdefault("codec", "json")
         cls.client = KVS(**server)
 
     def __getitem__(self, key):
@@ -48,7 +48,7 @@ class ApplicationCache(object):
     def get(self, key, default=None):
         return self.client.get(key, default)
 
-    def list_keys(self, pattern='*'):
+    def list_keys(self, pattern="*"):
         return self.client.get_keys(pattern)
 
     def set(self, key, value, ttl=None):

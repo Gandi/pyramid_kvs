@@ -19,7 +19,6 @@ def _create_token():
 
 @implementer(ISession)
 class SessionBase(object):
-
     def __init__(self, request, client, key_name):
         self._dirty = False
         self.key_name = key_name
@@ -30,7 +29,7 @@ class SessionBase(object):
         self._session_data = defaultdict(defaultdict)
 
         if not self._session_key:
-            log.warn('No session found')
+            log.warn("No session found")
             return
 
         stored_data = client.get(self._session_key)
@@ -121,22 +120,22 @@ class SessionBase(object):
         return time.time()  # XXX fix me
 
     def new_csrf_token(self):
-        self['__csrf_token'] = _create_token().decode('utf-8')
+        self["__csrf_token"] = _create_token().decode("utf-8")
 
     def get_csrf_token(self):
-        if '__csrf_token' not in self:
+        if "__csrf_token" not in self:
             self.new_csrf_token()
-        return self['__csrf_token']
+        return self["__csrf_token"]
 
-    def peek_flash(self, queue=''):
-        return self.get('_f_' + queue, [])
+    def peek_flash(self, queue=""):
+        return self.get("_f_" + queue, [])
 
-    def pop_flash(self, queue=''):
-        return self.pop('_f_' + queue, [])
+    def pop_flash(self, queue=""):
+        return self.pop("_f_" + queue, [])
 
-    def flash(self, msg, queue='', allow_duplicate=True):
+    def flash(self, msg, queue="", allow_duplicate=True):
         self.changed()
-        storage = self.setdefault('_f_' + queue, [])
+        storage = self.setdefault("_f_" + queue, [])
         if allow_duplicate or (msg not in storage):
             storage.append(msg)
 
@@ -152,7 +151,6 @@ class SessionBase(object):
 
 @implementer(ISession)
 class AuthTokenSession(SessionBase):
-
     def get_session_key(self):
 
         if not isinstance(self.key_name, (list, tuple)):
@@ -160,18 +158,20 @@ class AuthTokenSession(SessionBase):
 
         for header in self.key_name:
             if header in self.request.headers:
-                return '%s::%s' % (header.lower().replace('_', '-'),
-                                   self.request.headers[header])
+                return "%s::%s" % (
+                    header.lower().replace("_", "-"),
+                    self.request.headers[header],
+                )
 
     def update_session_token(self, header_name, value):
-        """ Create a session from the givent header name """
+        """Create a session from the givent header name"""
         if self._session_key:
             self.client.delete(self._session_key)
-        self._session_key = '%s::%s' % (header_name, value)
+        self._session_key = "%s::%s" % (header_name, value)
 
     def save_session(self, request=None, response=None):
-        """ Save the session in the key value store, in case a session
-        has been found """
+        """Save the session in the key value store, in case a session
+        has been found"""
         if not self._session_key:
             return
         if self._session_data is None:  # session invalidated
@@ -182,7 +182,6 @@ class AuthTokenSession(SessionBase):
 
 @implementer(ISession)
 class CookieSession(SessionBase):
-
     def get_session_key(self):
         session_key = self.request.cookies.get(self.key_name)
         if not session_key:
@@ -194,23 +193,22 @@ class CookieSession(SessionBase):
             self.client.delete(self._session_key)
             response.delete_cookie(self.key_name)
             return
-        response.set_cookie(self.key_name, self._session_key,
-                            self.client.ttl)
+        response.set_cookie(self.key_name, self._session_key, self.client.ttl)
         self.client.set(self._session_key, self._session_data)
 
 
 @implementer(ISessionFactory)
 class SessionFactory(object):
-
     def __init__(self, settings):
-        config = serializer('json').loads(settings['kvs.session'])
-        config.setdefault('key_prefix', 'session::')
-        sessions = {'header': AuthTokenSession,
-                    'cookie': CookieSession,
-                    }
+        config = serializer("json").loads(settings["kvs.session"])
+        config.setdefault("key_prefix", "session::")
+        sessions = {
+            "header": AuthTokenSession,
+            "cookie": CookieSession,
+        }
 
-        self.session_class = sessions[config.pop('session_type', 'cookie')]
-        self.key_name = config.pop('key_name', 'session_id')
+        self.session_class = sessions[config.pop("session_type", "cookie")]
+        self.key_name = config.pop("key_name", "session_id")
         self._client = KVS(**config)
 
     def __call__(self, request):

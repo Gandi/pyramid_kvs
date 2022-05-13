@@ -26,5 +26,5 @@ class MockCache(kvs.KVS):
 
 
 def includeme(config):
-    kvs.register('mock', MockCache)
-    config.include('pyramid_kvs')
+    kvs.register("mock", MockCache)
+    config.include("pyramid_kvs")
