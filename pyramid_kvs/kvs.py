@@ -4,7 +4,6 @@ import sys
 
 from .serializer import serializer
 
-
 PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str

@@ -1,8 +1,7 @@
 import logging
 
-from .serializer import serializer
 from .kvs import KVS
-
+from .serializer import serializer
 
 log = logging.getLogger(__name__)
 

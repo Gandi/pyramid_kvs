@@ -1,14 +1,14 @@
-import logging
-import time
-import os
 import binascii
+import logging
+import os
+import time
 from collections import defaultdict
 
-from zope.interface import implementer
 from pyramid.interfaces import ISession, ISessionFactory
+from zope.interface import implementer
 
-from .serializer import serializer
 from .kvs import KVS
+from .serializer import serializer
 
 log = logging.getLogger(__name__)
 

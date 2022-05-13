@@ -1,12 +1,10 @@
 from pyramid import testing
 from pyramid.events import NewRequest
 
-from .compat import unittest
-from .. import subscribe_cache
-
+from .. import serializer, subscribe_cache
 from ..cache import ApplicationCache
-from .. import serializer
 from ..testing import MockCache
+from .compat import unittest
 
 
 class DummyRequest(testing.DummyRequest):

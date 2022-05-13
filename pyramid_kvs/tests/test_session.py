@@ -1,10 +1,11 @@
+from collections import deque
+
 from pyramid import testing
 
-from collections import deque
-from .compat import unittest
-from ..session import SessionFactory, AuthTokenSession, CookieSession
 from .. import serializer
+from ..session import AuthTokenSession, CookieSession, SessionFactory
 from ..testing import MockCache
+from .compat import unittest
 
 
 class SessionTestCase(unittest.TestCase):
