@@ -4,7 +4,6 @@ import sys
 
 from setuptools import setup, find_packages
 
-PY3 = sys.version_info[0] == 3
 here = os.path.abspath(os.path.dirname(__file__))
 name = 'pyramid_kvs'
 
@@ -18,17 +17,10 @@ with open(os.path.join(here, name, '__init__.py')) as v_file:
                          re.S).match(v_file.read()).group(1)
 
 
-requires = ['pyramid', 'redis >= 3.0']
+requires = ['pyramid', 'redis >= 3.0', 'python3-memcached']
 
 
-if PY3:
-    requires.append('python3-memcached')
-else:
-    requires.append('python-memcached')
-
-tests_require = ['nose', 'coverage']
-if sys.version_info < (2, 7):
-    tests_require += ['unittest2']
+tests_require = ['pytest', 'coverage']
 
 extras_require = {'test': tests_require}
 

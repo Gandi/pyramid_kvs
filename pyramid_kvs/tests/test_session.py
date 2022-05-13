@@ -4,7 +4,7 @@ from collections import deque
 from .compat import unittest
 from ..session import SessionFactory, AuthTokenSession, CookieSession
 from .. import serializer
-from ..testing import MockCache, includeme as testing_includeme
+from ..testing import MockCache
 
 
 class SessionTestCase(unittest.TestCase):
