@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 name = 'pyramid_kvs'
@@ -22,7 +22,7 @@ requires = ['pyramid', 'redis >= 3.0', 'python3-memcached']
 
 tests_require = ['pytest', 'coverage']
 
-extras_require = {'test': tests_require}
+extras_require = {'test': tests_require, 'dev': ['black', 'isort']}
 
 
 setup(name=name.replace('_', '-'),
