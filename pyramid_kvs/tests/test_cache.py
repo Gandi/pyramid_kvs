@@ -18,10 +18,10 @@ class DummyRequest(testing.DummyRequest):
 class CacheTestCase(unittest.TestCase):
 
     def setUp(self):
-        settings = {'kvs.cache': """{"kvs": "mock",
+        settings = {'kvs.cache': {"kvs": "mock",
                                      "codec": "json",
                                      "key_prefix": "test::",
-                                     "ttl": 20}"""}
+                                     "ttl": 20}}
         self.config = testing.setUp(settings=settings)
         self.config.include('pyramid_kvs.testing')
 
