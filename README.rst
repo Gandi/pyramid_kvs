@@ -17,7 +17,7 @@ Here are the provides features:
  - A session manager
  - A rate limit per session holder
  - A perl session reader (except you are migrating a perl website,
-  you probably don't want to use it).
+   you probably don't want to use it).
 
 Every of this components are optional, they exists if they are set in the
 configuration like below.
@@ -90,8 +90,9 @@ The example contains every key with their default values for a redis instance.
 
 If the ratelimit is enabled, every response will be decorated with the
 following http headers:
- - ``X-RateLimit-Limit``: max queries in the period.
- - ``X-RateLimit-Remaining``: current remaining queries in that period.
+
+- ``X-RateLimit-Limit``: max queries in the period.
+- ``X-RateLimit-Remaining``: current remaining queries in that period.
 
 
 perlsess
@@ -143,5 +144,7 @@ tests
 pyramid_kvs have also a 'mock' implementation of a `kvs` used for testing
 purpose, register it using the pyramid plugins in your tests:::
 
-pyramid.includes =
-    pyramid_kvs.testing
+::
+
+  pyramid.includes =
+      pyramid_kvs.testing

@@ -5,9 +5,12 @@ Changelog
 ------------------
 
  * Switch default serializer to json
-   WARNING: pickle serialize datetime by default, json don't, force the
-            serializer to pickle for backward compatibility in case datetime
-            are serialized
+
+..warning::
+
+   pickle serialize datetime by default, json don't, force the
+   serializer to pickle for backward compatibility in case datetime
+   are serialized
 
 0.4.0 (2019-02-18)
 ------------------
@@ -20,9 +23,11 @@ Changelog
 ------------------
 
  * Switch default serializer to json
-   WARNING: pickle serialize datetime by default, json don't, force the
-            serializer to pickle for backward compatibility in case datetime
-            are serialized
+
+..warning::
+   pickle serialize datetime by default, json don't, force the
+   serializer to pickle for backward compatibility in case datetime
+   serialized
 
 0.3.0 (2018-03-15)
 ------------------
@@ -40,8 +45,9 @@ Changelog
 ------------------
 
 * Bump version for PyPI upload problems
-    A file named "pyramid-kvs-0.2.1.tar.gz" already exists for  pyramid-kvs-0.2.1.
-    To fix problems with that file you should create a new release.
+
+A file named "pyramid-kvs-0.2.1.tar.gz" already exists for  pyramid-kvs-0.2.1.
+To fix problems with that file you should create a new release.
 
 0.2.1
 -----

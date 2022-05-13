@@ -28,6 +28,7 @@ setup(
     version=version,
     description="Session and cache for Pyramid",
     long_description=README + "\n\n" + CHANGES,
+    long_description_content_type="text/x-rst",
     classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",
