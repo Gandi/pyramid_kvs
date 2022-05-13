@@ -12,7 +12,7 @@ with open(os.path.join(here, "CHANGES.rst")) as changes:
     CHANGES = changes.read()
 
 with open(os.path.join(here, name, "__init__.py")) as v_file:
-    version = re.compile(r".*__version__ = '(.*?)'", re.S).match(v_file.read()).group(1)
+    version = re.compile(r'.*__version__ = "(.*?)"', re.S).match(v_file.read()).group(1)
 
 
 requires = ["pyramid", "redis >= 3.0", "python3-memcached"]
