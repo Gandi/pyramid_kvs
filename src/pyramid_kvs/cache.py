@@ -6,7 +6,7 @@ from .serializer import serializer
 log = logging.getLogger(__name__)
 
 
-class ApplicationCache(object):
+class ApplicationCache:
     """
     An application cache for pyramid
     """

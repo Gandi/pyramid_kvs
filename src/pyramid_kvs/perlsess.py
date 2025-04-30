@@ -6,7 +6,7 @@ from .serializer import serializer
 log = logging.getLogger(__name__)
 
 
-class PerlSession(object):
+class PerlSession:
     """
     Read only session from a perl storable.
     Use the "connect method" during the configuration to initialize it
@@ -21,7 +21,7 @@ class PerlSession(object):
         self.request = request
         self._session_data = self.client.get(self._session_key)
         if self._session_data is None:
-            log.warn("session %s not deserialized" % self._session_key)
+            log.warn(f"session {self._session_key} not deserialized")
             self._session_data = {}
 
     def __call__(self, request):

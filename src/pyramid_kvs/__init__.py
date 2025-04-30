@@ -4,7 +4,10 @@ pyramid_kvs is a Key/Value Store helpers for pyramid.
 See the README.rst file for more information.
 """
 
-__version__ = "1.0.0"
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
 
 from pyramid.events import NewRequest
 
@@ -12,6 +15,8 @@ from .cache import ApplicationCache
 from .perlsess import PerlSession
 from .ratelimit import Ratelimit
 from .session import SessionFactory
+
+__version__ = version("pyramid-kvs")
 
 
 def subscribe_perlsess(event):

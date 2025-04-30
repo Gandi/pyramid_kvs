@@ -151,7 +151,7 @@ def SX_TIED_IDX(fh, cache):
 def SX_HOOK(fh, cache):
     flags = unpack("B", fh.read(1))[0]
 
-    while flags & int(0x40):  # SHF_NEED_RECURSE
+    while flags & 0x40:  # SHF_NEED_RECURSE
         # print("SHF_NEED_RECURSE")
         dummy = process_item(fh, cache)
         # print(dummy)
@@ -160,10 +160,10 @@ def SX_HOOK(fh, cache):
 
     # print("recursive done")
 
-    if flags & int(0x20):  # SHF_IDX_CLASSNAME
+    if flags & 0x20:  # SHF_IDX_CLASSNAME
         # print("SHF_IDX_CLASSNAME")
         # print("where:"+str(fh.tell()))
-        if flags & int(0x04):  # SHF_LARGE_CLASSLEN
+        if flags & 0x04:  # SHF_LARGE_CLASSLEN
             # print("SHF_LARGE_CLASSLEN")
             # TODO: test
             indx = unpack(">I", fh.read(4))[0]
@@ -173,7 +173,7 @@ def SX_HOOK(fh, cache):
         package_name = cache["classes"][indx]
     else:
         # print("where:"+str(fh.tell()))
-        if flags & int(0x04):  # SHF_LARGE_CLASSLEN
+        if flags & 0x04:  # SHF_LARGE_CLASSLEN
             # print("SHF_LARGE_CLASSLEN")
             # TODO: test
             # FIXME: is this actually possible?
@@ -189,7 +189,7 @@ def SX_HOOK(fh, cache):
     arguments = {}
 
     str_size = 0
-    if flags & int(0x08):  # SHF_LARGE_STRLEN
+    if flags & 0x08:  # SHF_LARGE_STRLEN
         # print("SHF_LARGE_STRLEN")
         str_size = _read_size(fh, cache)
     else:
@@ -202,9 +202,9 @@ def SX_HOOK(fh, cache):
         arguments[0] = frozen_str
 
     list_size = 0
-    if flags & int(0x80):  # SHF_HAS_LIST
+    if flags & 0x80:  # SHF_HAS_LIST
         # print("SHF_HAS_LIST")
-        if flags & int(0x10):  # SHF_LARGE_LISTLEN
+        if flags & 0x10:  # SHF_LARGE_LISTLEN
             # print("SHF_LARGE_LISTLEN")
             # print("where:"+str(fh.tell()))
             list_size = _read_size(fh, cache)
@@ -222,7 +222,7 @@ def SX_HOOK(fh, cache):
 
     # FIXME: implement the real callback STORABLE_thaw() still, for now, just
     # return the dictionary 'arguments' as data
-    type = flags & int(0x03)  # SHF_TYPE_MASK 0x03
+    type = flags & 0x03  # SHF_TYPE_MASK 0x03
     # print("flags:"+str(type))
     data = arguments
     if type == 3:  # SHT_EXTRA

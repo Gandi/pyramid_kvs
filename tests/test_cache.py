@@ -1,15 +1,16 @@
+import unittest
+
 from pyramid import testing
 from pyramid.events import NewRequest
 
-from .. import serializer, subscribe_cache
-from ..cache import ApplicationCache
-from ..testing import MockCache
-from .compat import unittest
+from pyramid_kvs import serializer, subscribe_cache
+from pyramid_kvs.cache import ApplicationCache
+from pyramid_kvs.testing import MockCache
 
 
 class DummyRequest(testing.DummyRequest):
     def __init__(self, *args, **kwargs):
-        super(DummyRequest, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         subscribe_cache(NewRequest(self))
 
 
@@ -39,7 +40,6 @@ class CacheTestCase(unittest.TestCase):
         self.assertEqual(client.key_prefix, b"test::")
 
     def test_cache_set(self):
-
         request = DummyRequest()
         request.cache["dummy"] = "value"
         self.assertEqual(MockCache.cached_data[b"test::dummy"], '"value"')

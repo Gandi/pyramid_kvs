@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 
 try:
     import cPickle as pickle
@@ -16,7 +15,7 @@ except ImportError:
     from . import storable
 
 
-class Storable(object):
+class Storable:
     """Something you probably don't want to use.
     This class is to get the perl storable support as a readable codec."""
 
