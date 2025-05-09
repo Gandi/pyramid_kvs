@@ -21,7 +21,7 @@ cov test_suite=default_test_suite:
     uv run pytest --cov-report=html --cov={{package}} {{test_suite}}
     xdg-open htmlcov/index.html
 
-mypy:
+typecheck:
     uv run mypy src/ tests/
 
 fmt:

@@ -4,29 +4,34 @@ import logging
 import os
 import time
 from collections import defaultdict
+from typing import ItemsView, Iterator, KeysView, Mapping, MutableMapping, ValuesView
 
 from pyramid.interfaces import ISession, ISessionFactory
+from pyramid.response import Response
+from typing_extensions import Optional
 from zope.interface import implementer
+
+from pyramid_kvs.typing import AnyValue, Request, Settings
 
 from .kvs import KVS
 
 log = logging.getLogger(__name__)
 
 
-def _create_token():
+def _create_token() -> bytes:
     return binascii.hexlify(os.urandom(20))
 
 
 @implementer(ISession)
 class SessionBase:
-    def __init__(self, request, client, key_name):
+    def __init__(self, request: Request, client: KVS, key_name: str) -> None:
         self._dirty = False
         self.key_name = key_name
         self.client = client
         self.request = request
 
         self._session_key = self.get_session_key()
-        self._session_data = defaultdict(defaultdict)
+        self._session_data: MutableMapping[str, AnyValue] = defaultdict(defaultdict)
 
         if not self._session_key:
             log.warn("No session found")
@@ -38,108 +43,105 @@ class SessionBase:
         else:
             self.changed()
 
+    def get_session_key(self) -> str | None:
+        raise NotImplementedError()
+
+    def save_session(self, request: Request, response: Response) -> None:
+        raise NotImplementedError()
+
     # IDict stuff
-    def __delitem__(self, key):
+    def __delitem__(self, key: str) -> None:
         self.changed()
         del self._session_data[key]
 
-    def setdefault(self, key, default=None):
+    def setdefault(self, key: str, default: AnyValue) -> AnyValue:
         self.changed()
         return self._session_data.setdefault(key, default)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> AnyValue:
         self.changed()
         return self._session_data[key]
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> bool:
         return key in self._session_data
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._session_data)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self._session_data.__repr__()
 
-    def keys(self):
+    def keys(self) -> KeysView[str]:
         return self._session_data.keys()
 
-    def items(self):
+    def items(self) -> ItemsView[str, AnyValue]:
         self.changed()
         return self._session_data.items()
 
-    def clear(self):
+    def clear(self) -> None:
         self.changed()
         self._session_data.clear()
 
-    def get(self, key, default=None):
+    def get(self, key: str, default: Optional[AnyValue] = None) -> AnyValue:
         self.changed()
         return self._session_data.get(key, default)
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: AnyValue) -> None:
         self.changed()
         return self._session_data.__setitem__(key, value)
 
-    def pop(self, key, default=None):
+    def pop(self, key: str, default: Optional[AnyValue] = None) -> AnyValue:
         self.changed()
         return self._session_data.pop(key, default)
 
-    def update(self, dict_):
+    def update(self, dict_: Mapping[str, AnyValue]) -> None:
         self.changed()
-        return self._session_data.update(dict_)
+        self._session_data.update(dict_)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[AnyValue]:
         self.changed()
         return self._session_data.__iter__()
 
-    def has_key(self, key):
+    def has_key(self, key: str) -> bool:
         return key in self._session_data
 
-    def values(self):
+    def values(self) -> ValuesView[AnyValue]:
         return self._session_data.values()
 
-    def itervalues(self):
-        return self._session_data.itervalues()
-
-    def iteritems(self):
-        return self._session_data.iteritems()
-
-    def iterkeys(self):
-        return self._session_data.iterkeys()
-
     # ISession Stuff
-    def invalidate(self):
+    def invalidate(self) -> None:
         self.changed()
         self._session_data = defaultdict(defaultdict)
 
     @property
-    def created(self):
+    def created(self) -> float:
         return time.time()  # XXX fix me
 
-    def new_csrf_token(self):
+    def new_csrf_token(self) -> None:
         self["__csrf_token"] = _create_token().decode("utf-8")
 
-    def get_csrf_token(self):
+    def get_csrf_token(self) -> str:
         if "__csrf_token" not in self:
             self.new_csrf_token()
         return self["__csrf_token"]
 
-    def peek_flash(self, queue=""):
+    def peek_flash(self, queue: str = "") -> AnyValue:
         return self.get("_f_" + queue, [])
 
-    def pop_flash(self, queue=""):
+    def pop_flash(self, queue: str = "") -> AnyValue:
         return self.pop("_f_" + queue, [])
 
-    def flash(self, msg, queue="", allow_duplicate=True):
+    def flash(self, msg: str, queue: str = "", allow_duplicate: bool = True) -> None:
         self.changed()
         storage = self.setdefault("_f_" + queue, [])
         if allow_duplicate or (msg not in storage):
             storage.append(msg)
 
     @property
-    def new(self):
+    def new(self) -> bool:
         return False
 
-    def changed(self):
+    def changed(self) -> None:
         if not self._dirty:
             self._dirty = True
             self.request.add_response_callback(self.save_session)
@@ -147,9 +149,9 @@ class SessionBase:
 
 @implementer(ISession)
 class AuthTokenSession(SessionBase):
-    def get_session_key(self):
+    def get_session_key(self) -> str | None:
         if not isinstance(self.key_name, (list, tuple)):
-            self.key_name = [self.key_name]
+            self.key_name = [self.key_name]  # type: ignore
 
         for header in self.key_name:
             if header in self.request.headers:
@@ -157,14 +159,15 @@ class AuthTokenSession(SessionBase):
                     header.lower().replace("_", "-"),
                     self.request.headers[header],
                 )
+        return None
 
-    def update_session_token(self, header_name, value):
+    def update_session_token(self, header_name: str, value: str) -> None:
         """Create a session from the givent header name"""
         if self._session_key:
             self.client.delete(self._session_key)
         self._session_key = f"{header_name}::{value}"
 
-    def save_session(self, request=None, response=None):
+    def save_session(self, request: Request, response: Response) -> None:
         """Save the session in the key value store, in case a session
         has been found"""
         if not self._session_key:
@@ -177,13 +180,14 @@ class AuthTokenSession(SessionBase):
 
 @implementer(ISession)
 class CookieSession(SessionBase):
-    def get_session_key(self):
+    def get_session_key(self) -> str | None:
         session_key = self.request.cookies.get(self.key_name)
         if not session_key:
-            session_key = _create_token()
+            session_key = _create_token().decode()
         return session_key
 
-    def save_session(self, request, response):
+    def save_session(self, request: Request, response: Response) -> None:
+        assert self._session_key
         if self._session_data is None:  # session invalidated
             self.client.delete(self._session_key)
             response.delete_cookie(self.key_name)
@@ -194,7 +198,7 @@ class CookieSession(SessionBase):
 
 @implementer(ISessionFactory)
 class SessionFactory:
-    def __init__(self, settings):
+    def __init__(self, settings: Settings) -> None:
         if isinstance(settings["kvs.session"], dict):
             config = settings["kvs.session"].copy()
         else:
@@ -209,5 +213,5 @@ class SessionFactory:
         self.key_name = config.pop("key_name", "session_id")
         self._client = KVS(**config)
 
-    def __call__(self, request):
+    def __call__(self, request: Request) -> SessionBase:
         return self.session_class(request, self._client, self.key_name)

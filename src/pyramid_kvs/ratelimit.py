@@ -1,6 +1,10 @@
 import json
 import logging
 
+from pyramid.response import Response
+
+from pyramid_kvs.typing import Request, Settings
+
 log = logging.getLogger(__name__)
 
 
@@ -14,11 +18,11 @@ class Ratelimit:
     You must use the pyramid_kvs session implementation to get it working.
     """
 
-    window = 1  # in seconds
-    limit = 15  # max call in the during window
-    key_suffix = "::ratelimit"
+    window: int = 1  # in seconds
+    limit: int = 15  # max call in the during window
+    key_suffix: str = "::ratelimit"
 
-    def __init__(self, request):
+    def __init__(self, request: Request) -> None:
         key = (request.session.get_session_key() + self.key_suffix).encode()
         client = request.session.client
         request.add_response_callback(self._add_headers)
@@ -32,7 +36,7 @@ class Ratelimit:
             raise RateLimitError()
 
     @classmethod
-    def configure(cls, settings):
+    def configure(cls, settings: Settings) -> None:
         if isinstance(settings["kvs.ratelimit"], dict):
             config = settings["kvs.ratelimit"].copy()
         else:
@@ -42,6 +46,6 @@ class Ratelimit:
         cls.window = config.get("window", cls.window)
         cls.limit = config.get("limit", cls.limit)
 
-    def _add_headers(self, request, response):
+    def _add_headers(self, request: Request, response: Response) -> None:
         response.headers["X-RateLimit-Limit"] = str(self.limit)
         response.headers["X-RateLimit-Remaining"] = str(self.limit - self.count)

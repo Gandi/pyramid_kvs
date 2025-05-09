@@ -6,6 +6,9 @@ from pyramid.config import Configurator
 from pyramid.interfaces import IRequestExtensions, ISessionFactory
 from pyramid.request import apply_request_extensions
 
+from pyramid_kvs.session import SessionFactory
+from pyramid_kvs.typing import Request
+
 
 @pytest.fixture(scope="session")
 def settings():
@@ -39,12 +42,13 @@ def config(settings: Mapping[str, Any]) -> Iterator[Configurator]:
 
 @pytest.fixture()
 def dummy_request_factory(config: Configurator) -> Type[testing.DummyRequest]:
-    class DummyRequest(testing.DummyRequest):
-        def __init__(self, *args, **kwargs):
+    class DummyRequest(testing.DummyRequest, Request):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
             super().__init__(*args, **kwargs)
-            exts: IRequestExtensions = self.registry.queryUtility(IRequestExtensions)
+            assert config.registry
+            exts: IRequestExtensions = config.registry.queryUtility(IRequestExtensions)
             apply_request_extensions(self, exts)
-            sess: ISessionFactory = config.registry.queryUtility(ISessionFactory)
+            sess: SessionFactory = config.registry.queryUtility(ISessionFactory)
             self.session = sess(self)
 
     return DummyRequest

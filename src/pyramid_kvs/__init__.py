@@ -7,8 +7,9 @@ See the README.rst file for more information.
 try:
     from importlib.metadata import version
 except ImportError:
-    from importlib_metadata import version
+    from importlib_metadata import version  # type: ignore
 
+from pyramid.config import Configurator
 from pyramid.events import NewRequest
 
 from .cache import ApplicationCache
@@ -18,12 +19,12 @@ from .session import SessionFactory
 __version__ = version("pyramid-kvs")
 
 
-def subscribe_ratelimit(event):
+def subscribe_ratelimit(event: NewRequest) -> None:
     Ratelimit(event.request)
 
 
-def includeme(config):
-    settings = config.registry.settings
+def includeme(config: Configurator) -> None:
+    settings = config.registry.settings  # type: ignore
 
     if "kvs.cache" in settings:
         ApplicationCache.connect(settings)
