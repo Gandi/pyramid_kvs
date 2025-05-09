@@ -4,24 +4,18 @@ pyramid_kvs is a Key/Value Store helpers for pyramid.
 See the README.rst file for more information.
 """
 
-__version__ = "1.0.0"
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
 
 from pyramid.events import NewRequest
 
 from .cache import ApplicationCache
-from .perlsess import PerlSession
 from .ratelimit import Ratelimit
 from .session import SessionFactory
 
-
-def subscribe_perlsess(event):
-    request = event.request
-    request.set_property(PerlSession(request), "perlsess", reify=True)
-
-
-def subscribe_cache(event):
-    request = event.request
-    request.set_property(ApplicationCache(request), "cache", reify=True)
+__version__ = version("pyramid-kvs")
 
 
 def subscribe_ratelimit(event):
@@ -29,16 +23,11 @@ def subscribe_ratelimit(event):
 
 
 def includeme(config):
-
     settings = config.registry.settings
-
-    if "kvs.perlsess" in settings:
-        PerlSession.connect(settings)
-        config.add_subscriber(subscribe_perlsess, NewRequest)
 
     if "kvs.cache" in settings:
         ApplicationCache.connect(settings)
-        config.add_subscriber(subscribe_cache, NewRequest)
+        config.add_request_method(ApplicationCache, "cache", property=True)
 
     if "kvs.session" in settings:
         config.set_session_factory(SessionFactory(settings))

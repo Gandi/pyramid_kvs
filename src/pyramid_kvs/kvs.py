@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 
 import sys
 
@@ -9,7 +8,7 @@ if PY3:
     unicode = str
 
 
-class KVS(object):
+class KVS:
     """
     Create a Key Value Store connection.
     Redis and Memcache are support.
@@ -83,7 +82,7 @@ class Redis(KVS):
         return [key.replace(self.key_prefix, "") for key in keys]
 
 
-class _NoCodec(object):
+class _NoCodec:
     def __init__(self, strio, *args, **kwargs):
         self.strio = strio
         self.persistent_load = None

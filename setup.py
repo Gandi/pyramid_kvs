@@ -43,7 +43,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    test_suite="{0}.tests".format(name),
+    test_suite=f"{name}.tests",
     install_requires=requires,
     tests_require=tests_require,
     extras_require=extras_require,

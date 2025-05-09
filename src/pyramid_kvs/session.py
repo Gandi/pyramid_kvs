@@ -18,7 +18,7 @@ def _create_token():
 
 
 @implementer(ISession)
-class SessionBase(object):
+class SessionBase:
     def __init__(self, request, client, key_name):
         self._dirty = False
         self.key_name = key_name
@@ -50,10 +50,6 @@ class SessionBase(object):
     def __getitem__(self, key):
         self.changed()
         return self._session_data[key]
-
-    def __setitem__(self, key, value):
-        self.changed()
-        self._session_data[key] = value
 
     def __contains__(self, key):
         return key in self._session_data
@@ -152,13 +148,12 @@ class SessionBase(object):
 @implementer(ISession)
 class AuthTokenSession(SessionBase):
     def get_session_key(self):
-
         if not isinstance(self.key_name, (list, tuple)):
             self.key_name = [self.key_name]
 
         for header in self.key_name:
             if header in self.request.headers:
-                return "%s::%s" % (
+                return "{}::{}".format(
                     header.lower().replace("_", "-"),
                     self.request.headers[header],
                 )
@@ -167,7 +162,7 @@ class AuthTokenSession(SessionBase):
         """Create a session from the givent header name"""
         if self._session_key:
             self.client.delete(self._session_key)
-        self._session_key = "%s::%s" % (header_name, value)
+        self._session_key = f"{header_name}::{value}"
 
     def save_session(self, request=None, response=None):
         """Save the session in the key value store, in case a session
@@ -198,7 +193,7 @@ class CookieSession(SessionBase):
 
 
 @implementer(ISessionFactory)
-class SessionFactory(object):
+class SessionFactory:
     def __init__(self, settings):
         config = serializer("json").loads(settings["kvs.session"])
         config.setdefault("key_prefix", "session::")

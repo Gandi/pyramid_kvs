@@ -1,6 +1,5 @@
 import logging
 
-from .kvs import KVS
 from .serializer import serializer
 
 log = logging.getLogger(__name__)
@@ -10,7 +9,7 @@ class RateLimitError(Exception):
     pass
 
 
-class Ratelimit(object):
+class Ratelimit:
     """
     Rate limit your call http request.
     You must use the pyramid_kvs session implementation to get it working.

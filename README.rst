@@ -2,8 +2,8 @@
 pyramid_kvs
 ===========
 
-.. image:: https://travis-ci.org/Gandi/pyramid_kvs.svg?branch=master
-    :target: https://travis-ci.org/Gandi/pyramid_kvs
+.. image:: https://github.com/mardiros/pyramid-kvs2/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/mardiros/pyramid-kvs2/actions/workflows/tests.yml
 
 Some Key Value Store basics for pyramid:
 
@@ -16,8 +16,6 @@ Here are the provides features:
  - An application cache, shared by every request.
  - A session manager
  - A rate limit per session holder
- - A perl session reader (except you are migrating a perl website,
-   you probably don't want to use it).
 
 Every of this components are optional, they exists if they are set in the
 configuration like below.
@@ -95,23 +93,9 @@ following http headers:
 - ``X-RateLimit-Remaining``: current remaining queries in that period.
 
 
-perlsess
-========
 
-This permit to read a session from a perl that use `storable`_ session.
-
-_`storable`: http://search.cpan.org/~ams/Storable-2.45/Storable.pm
-
-Here is an example.
-
-::
-
-
-    # declare the perlsess
-    kvs.perlsess = {"type": "memcached"}
-
-
-Usage:
+Usage
+=====
 
 Declare the addons in the ``pyramid.includes`` in your config, then
 tweak the settings like above.
